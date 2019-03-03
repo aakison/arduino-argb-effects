@@ -9,8 +9,8 @@
 class PopEffect {
 public:
   PopEffect(CRGB* leds, int innerCount, int outerCount) :
-    inner(0, 2500, 2600, 2800, 3500),
-    outer(2500, 2700, 2750, 3500, 3500) {
+    inner(0, 2500, 2500, 2600, 3300),
+    outer(2500, 2600, 2650, 3300, 3300) {
       innerLeds = leds;
       this->innerCount = innerCount;
       outerLeds = &leds[innerCount];
