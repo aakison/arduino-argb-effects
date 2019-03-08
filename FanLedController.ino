@@ -71,11 +71,10 @@ void setup() {
   }
 }
 
-long ticks = 0;
 int clock = LOW; 
 
 void loop() {
-  ++ticks;
+  long ticks = millis();
 
   hue.Loop(ticks);
   //pop.Loop(ticks);
@@ -88,7 +87,7 @@ void loop() {
   digitalWrite(led, clock);
   FastLED.show();
 
-  delay(1);
+  delay(4); // No more than 16 to hit 60fps
 }
 
 
