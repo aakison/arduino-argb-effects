@@ -28,17 +28,18 @@
 
 #include "Trapezoid.h"
 #include "PopEffect.h"
+#include "HueEffect.h"
 
 int led = 11;
 
 const int LED_DT = 7;
 #define COLOR_ORDER GRB
 #define LED_TYPE WS2812B
-#define NUM_LEDS 16
+#define NUM_LEDS 32
 
 #define Fixed int
 
-int maxBright = 128;
+int maxBright = 140;
 
 struct CRGB leds[NUM_LEDS];
 
@@ -50,6 +51,10 @@ int rim[RIM];
 Trapezoid* trapezoid = new Trapezoid(0, 65, 70, 100, 200);
 
 PopEffect pop = PopEffect(leds, 4, 12);
+HueEffect hue = HueEffect(leds, 4, 7000);
+HueEffect hue2 = HueEffect(leds + 4, 12, 5000);
+HueEffect hue4 = HueEffect(leds + 16, 4, 3000);
+HueEffect hue3 = HueEffect(leds + 20, 12, 2000);
 
 // the setup routine runs once when you press reset:
 void setup() {                
@@ -67,21 +72,23 @@ void setup() {
 }
 
 long ticks = 0;
- 
+int clock = LOW; 
+
 void loop() {
-
-  //leds[rim[tick % RIM]] = CRGB::Black;
-  //leds[hub[(tick / 3) % HUB]] = CRGB::Black;
   ++ticks;
-  //leds[rim[tick % RIM]] = CRGB::Blue;
-  //leds[hub[(tick / 3) % HUB]] = CRGB::Red;
-  
-  //chaseLoop(tick);
-  pop.Loop(ticks);
 
-  analogWrite(led, trapezoid->Evaluate(ticks));
+  hue.Loop(ticks);
+  //pop.Loop(ticks);
+  hue2.Loop(ticks);
+  hue3.Loop(ticks);
+  hue4.Loop(ticks);
+  //chaseLoop(ticks);
+  clock = (clock == LOW) ? HIGH : LOW;
+
+  digitalWrite(led, clock);
+  FastLED.show();
+
   delay(1);
-
 }
 
 
@@ -96,7 +103,7 @@ void chaseLoop(long ticks) {
   leds[3].r = trapezoid->Evaluate(ticks + 150);
 
   for(int i = 4; i < 16; ++i) {
-    leds[i].g = trapezoid->Evaluate(ticks + 12 * i);
+    leds[i].g = trapezoid->Evaluate(ticks + -12 * i);
   }
   FastLED.show();
 }
