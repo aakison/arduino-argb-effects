@@ -58,6 +58,16 @@ HueEffect hue2 = HueEffect(leds + 4, 12, 5000);
 HueEffect hue4 = HueEffect(leds + 16, 4, 3000);
 HueEffect hue3 = HueEffect(leds + 20, 12, 2000);
 
+int clock = LOW; 
+
+Sequence allLeds = Sequence(leds, NUM_LEDS, NUM_LEDS);
+Sequence topOuter = Sequence(leds + 4, 12, 12);
+Sequence topInner = Sequence(leds, 4, 4);
+Sequence lowerOuter = Sequence(leds, 32, 12);
+
+ChaseEffect chase = ChaseEffect(topOuter, 1200);
+ChaseEffect chase2 = ChaseEffect(lowerOuter, 1200);
+
 // the setup routine runs once when you press reset:
 void setup() {                
   // initialize the digital pin as an output.
@@ -71,23 +81,21 @@ void setup() {
   for(int i = 0; i < RIM; ++i) {
     rim[i] = HUB + i;
   }
+  lowerOuter.Set(31, 12, -1);
 }
 
-int clock = LOW; 
 
-Sequence allLeds = Sequence(leds, NUM_LEDS, NUM_LEDS / 2);
-
-ChaseEffect chase = ChaseEffect(allLeds, 3000);
 
 void loop() {
   long ticks = millis();
 
-  hue.Loop(ticks);
+  //hue.Loop(ticks);
   //pop.Loop(ticks);
   hue2.Loop(ticks);
   hue3.Loop(ticks);
   hue4.Loop(ticks);
-  //chase.Update(ticks);
+  chase.Update(ticks);
+  chase2.Update(ticks);
   
   // Alternate high/low in dev to trigger oscilliscope
   clock = (clock == LOW) ? HIGH : LOW;

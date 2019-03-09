@@ -8,7 +8,7 @@
 
 class ChaseEffect {
 public:
-  ChaseEffect(Sequence leds, int cycleTime) 
+  ChaseEffect(Sequence& leds, int cycleTime) 
     : inner(0, 100, 200, 500, cycleTime), leds(leds)
   {
       this->cycleTime = cycleTime;
@@ -17,14 +17,14 @@ public:
   void Update(long ticks) {
     for(int i = 0; i < leds.GetCount(); ++i) {
       int brightness = inner.Evaluate(ticks + offset * i);
-      CRGB* led = leds[i];
-      led->r = brightness;
-      led->g = brightness;
-      led->b = brightness;
+      CRGB& led = leds[i];
+      led.r = brightness;
+      led.g = brightness;
+      led.b = brightness;
     }
   }
 private:
-  Sequence leds;
+  Sequence& leds;
   Trapezoid inner;
   int cycleTime;
   int offset;
