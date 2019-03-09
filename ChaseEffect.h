@@ -8,26 +8,24 @@
 
 class ChaseEffect {
 public:
-  ChaseEffect(CRGB* leds, int count, int cycleTime) 
-    : inner(0, 100, 200, 500, cycleTime)
+  ChaseEffect(Sequence leds, int cycleTime) 
+    : inner(0, 100, 200, 500, cycleTime), leds(leds)
   {
-      this->leds  = leds;
-      this->count = count;
       this->cycleTime = cycleTime;
-      offset = cycleTime / count;
+      offset = cycleTime / leds.GetCount();
   }
   void Update(long ticks) {
-    for(int i = 0; i < count; ++i) {
+    for(int i = 0; i < leds.GetCount(); ++i) {
       int brightness = inner.Evaluate(ticks + offset * i);
-      leds[i].r = brightness;
-      leds[i].g = brightness;
-      leds[i].b = brightness;
+      CRGB* led = leds[i];
+      led->r = brightness;
+      led->g = brightness;
+      led->b = brightness;
     }
   }
 private:
+  Sequence leds;
   Trapezoid inner;
-  CRGB* leds;
-  int count;
   int cycleTime;
   int offset;
 };

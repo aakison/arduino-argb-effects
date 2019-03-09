@@ -26,6 +26,7 @@
 #include <platforms.h>
 #include <power_mgt.h>
 
+#include "Sequence.h"
 #include "Trapezoid.h"
 #include "PopEffect.h"
 #include "HueEffect.h"
@@ -74,7 +75,9 @@ void setup() {
 
 int clock = LOW; 
 
-ChaseEffect chase = ChaseEffect(leds + 4, 12, 1500);
+Sequence allLeds = Sequence(leds, NUM_LEDS, NUM_LEDS / 2);
+
+ChaseEffect chase = ChaseEffect(allLeds, 3000);
 
 void loop() {
   long ticks = millis();
@@ -84,7 +87,7 @@ void loop() {
   hue2.Loop(ticks);
   hue3.Loop(ticks);
   hue4.Loop(ticks);
-  chase.Update(ticks);
+  //chase.Update(ticks);
   
   // Alternate high/low in dev to trigger oscilliscope
   clock = (clock == LOW) ? HIGH : LOW;
