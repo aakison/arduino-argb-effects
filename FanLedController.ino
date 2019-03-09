@@ -79,9 +79,9 @@ ChaseEffect chase = ChaseEffect(leds + 4, 12, 1500);
 void loop() {
   long ticks = millis();
 
-  hue.Loop(ticks);
-  //pop.Loop(ticks);
-  hue2.Loop(ticks);
+  // hue.Loop(ticks);
+  // //pop.Loop(ticks);
+  // hue2.Loop(ticks);
   hue3.Loop(ticks);
   hue4.Loop(ticks);
   chase.Update(ticks);
