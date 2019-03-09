@@ -29,6 +29,7 @@
 #include "Trapezoid.h"
 #include "PopEffect.h"
 #include "HueEffect.h"
+#include "ChaseEffect.h"
 
 int led = 11;
 
@@ -73,6 +74,8 @@ void setup() {
 
 int clock = LOW; 
 
+ChaseEffect chase = ChaseEffect(leds + 4, 12, 1500);
+
 void loop() {
   long ticks = millis();
 
@@ -81,28 +84,14 @@ void loop() {
   hue2.Loop(ticks);
   hue3.Loop(ticks);
   hue4.Loop(ticks);
-  //chaseLoop(ticks);
+  chase.Update(ticks);
+  
+  // Alternate high/low in dev to trigger oscilliscope
   clock = (clock == LOW) ? HIGH : LOW;
-
   digitalWrite(led, clock);
+ 
+  // Show the cummulative effect of all the led changes
   FastLED.show();
 
   delay(4); // No more than 16 to hit 60fps
-}
-
-
-void popLoop(long ticks) {
-  
-}
-
-void chaseLoop(long ticks) {
-  leds[0].r = trapezoid->Evaluate(ticks + 00);
-  leds[1].r = trapezoid->Evaluate(ticks + 50);
-  leds[2].r = trapezoid->Evaluate(ticks + 100);
-  leds[3].r = trapezoid->Evaluate(ticks + 150);
-
-  for(int i = 4; i < 16; ++i) {
-    leds[i].g = trapezoid->Evaluate(ticks + -12 * i);
-  }
-  FastLED.show();
 }
