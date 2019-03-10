@@ -9,31 +9,23 @@
 class HueEffect {
 public:
 
-  HueEffect(CRGB* leds, int count, int duration, int offset = 0) 
+  HueEffect(Sequence& leds, int duration, int offset = 0) : leds(leds)
   {
-    cycle = new Trapezoid(0, duration / 3, duration / 3, 2 * duration / 3, duration);
-    this->leds = leds;
-    this->count = count;
     this->duration = duration;
     this->offset = offset;
   }
 
   void Loop(long ticks) 
   {
-    CRGB color;
-    color.r = cycle->Evaluate(ticks + offset);
-    color.g = cycle->Evaluate(ticks + offset + duration / 3);
-    color.b = cycle->Evaluate(ticks + offset + 2 * duration / 3);
-    for(int i = 0; i < count; ++i) {
+    int hue = InverseLerpLerp(0, duration, 0, 255, (ticks + offset) % duration);
+    CRGB color = CHSV(hue, 255, 255);
+    for(int i = 0; i < leds.GetCount(); ++i) {
       leds[i] = color;
     }
-    
   }
 
 private:
-  Trapezoid* cycle;
-  CRGB* leds;
-  int count;
+  Sequence& leds;
   int duration;
   int offset;
 };

@@ -53,10 +53,6 @@ int rim[RIM];
 Trapezoid* trapezoid = new Trapezoid(0, 65, 70, 100, 200);
 
 PopEffect pop = PopEffect(leds, 4, 12);
-HueEffect hue = HueEffect(leds, 4, 7000);
-HueEffect hue2 = HueEffect(leds + 4, 12, 5000);
-HueEffect hue4 = HueEffect(leds + 16, 4, 3000);
-HueEffect hue3 = HueEffect(leds + 20, 12, 2000);
 
 int clock = LOW; 
 
@@ -64,8 +60,14 @@ Sequence allLeds = Sequence(leds, NUM_LEDS, NUM_LEDS);
 Sequence topOuter = Sequence(leds + 4, 12, 12);
 Sequence topInner = Sequence(leds, 4, 4);
 Sequence lowerOuter = Sequence(leds, 32, 12);
+Sequence lowerInner = Sequence(leds + 16, 4, 4);
 Sequence figureEight = Sequence(leds, NUM_LEDS, 24);
 Sequence randomLeds = Sequence(leds, NUM_LEDS, NUM_LEDS);
+
+HueEffect hue = HueEffect(topOuter, 7000);
+HueEffect hue2 = HueEffect(topInner, 5000);
+HueEffect hue4 = HueEffect(lowerOuter, 3000);
+HueEffect hue3 = HueEffect(lowerInner, 2000);
 
 ChaseEffect chase = ChaseEffect(figureEight, 2500);
 
@@ -90,7 +92,7 @@ void setup() {
   figureEight.Set(20, 10, +1);
   figureEight.Set(8, 5, -1);
 
-  randomLeds.Set(0, NUM_LEDS, 23);
+  randomLeds.Set(0, NUM_LEDS, 997);
 }
 
 
@@ -98,15 +100,17 @@ void setup() {
 void loop() {
   long ticks = millis();
 
-  //hue.Loop(ticks);
+  hue.Loop(ticks);
   //pop.Loop(ticks);
   hue2.Loop(ticks);
   hue3.Loop(ticks);
   hue4.Loop(ticks);
-  shower.Update(ticks);
+  //shower.Update(ticks);
+  chase.Update(ticks);
   
   // Alternate high/low in dev to trigger oscilliscope
   clock = (clock == LOW) ? HIGH : LOW;
+  clock = HIGH;
   digitalWrite(led, clock);
  
   // Show the cumulative effect of all the led changes
