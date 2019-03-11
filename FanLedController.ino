@@ -95,8 +95,6 @@ void setup() {
   randomLeds.Set(0, NUM_LEDS, 997);
 }
 
-
-
 void loop() {
   long ticks = millis();
 
@@ -110,7 +108,6 @@ void loop() {
   
   // Alternate high/low in dev to trigger oscilliscope
   clock = (clock == LOW) ? HIGH : LOW;
-  clock = HIGH;
   digitalWrite(led, clock);
  
   // Show the cumulative effect of all the led changes
