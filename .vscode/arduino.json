@@ -1,6 +1,6 @@
 {
     "port": "COM3",
     "board": "arduino:avr:nano",
-    "configuration": "cpu=atmega328old",
+    "configuration": "cpu=atmega328",
     "sketch": "FanLedController.ino"
 }

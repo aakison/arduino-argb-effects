@@ -34,6 +34,7 @@
 #include "SolidEffect.h"
 #include "ColorCircleEffect.h"
 #include "Case.h"
+#include "CompositeEffect.h"
                              
 int led = 5;
 
@@ -100,6 +101,8 @@ ChaseEffect countLeds = ChaseEffect(allLeds, 30000);
 
 ColorCircleEffect caseCircle(c.BodyLeds(), effectTime);
 
+CompositeEffect ce(5);
+
 // the setup routine runs once when you press reset:
 void setup() {                
   // initialize the digital pin as an output.
@@ -124,6 +127,12 @@ void setup() {
 
   bottomInnerCounterClockwise.Reverse();
   bottomOuterCounterClockwise.Reverse();
+
+  ce.Add(caseCircle);
+  ce.Add(topInnerColorCircle);
+  ce.Add(topOuterColorCircle);
+  ce.Add(bottomInnerColorCircle);
+  ce.Add(bottomOuterColorCircle);
 }
 
 void loop() {
@@ -135,14 +144,11 @@ void loop() {
   hue3.Update(ticks);
   //hue4.Update(ticks);
   //shower.Update(ticks);
-  chase.Update(ticks);
   caseHue.Update(ticks);
 
-  topInnerColorCircle.Update(ticks);
-  topOuterColorCircle.Update(ticks);
-  bottomInnerColorCircle.Update(ticks);
-  bottomOuterColorCircle.Update(ticks);
-  caseCircle.Update(ticks);
+  ce.Update(ticks);
+
+  //chase.Update(ticks);
 
   //countLeds.Update(ticks);
 
