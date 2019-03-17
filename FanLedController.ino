@@ -84,10 +84,21 @@ ChaseEffect shower(randomLeds, 2000);
 
 SolidEffect allOn(allLeds, CRGB::White);
 
-ColorCircleEffect outerColorCircle(c.TopFanOuterLeds(), 1000); 
-ColorCircleEffect innerColorCircle(c.TopFanInnerLeds(), 1000);
+const int effectTime = 5000;
+const int effectOffset = (int)((long)effectTime * 7 / 16);
+
+ColorCircleEffect topInnerColorCircle(c.TopFanInnerLeds(), effectTime);
+ColorCircleEffect topOuterColorCircle(c.TopFanOuterLeds(), effectTime); 
+
+Sequence bottomInnerCounterClockwise(c.BottomFanInnerLeds());
+Sequence bottomOuterCounterClockwise(c.BottomFanOuterLeds());
+
+ColorCircleEffect bottomInnerColorCircle(bottomInnerCounterClockwise, effectTime, effectOffset);
+ColorCircleEffect bottomOuterColorCircle(bottomOuterCounterClockwise, effectTime, effectOffset); 
 
 ChaseEffect countLeds = ChaseEffect(allLeds, 30000);
+
+ColorCircleEffect caseCircle(c.BodyLeds(), effectTime);
 
 // the setup routine runs once when you press reset:
 void setup() {                
@@ -110,6 +121,9 @@ void setup() {
   figureEight.Set(8, 5, -1);
 
   randomLeds.Set(0, NUM_LEDS, 997);
+
+  bottomInnerCounterClockwise.Reverse();
+  bottomOuterCounterClockwise.Reverse();
 }
 
 void loop() {
@@ -124,8 +138,11 @@ void loop() {
   chase.Update(ticks);
   caseHue.Update(ticks);
 
-  outerColorCircle.Update(ticks);
-  innerColorCircle.Update(ticks);
+  topInnerColorCircle.Update(ticks);
+  topOuterColorCircle.Update(ticks);
+  bottomInnerColorCircle.Update(ticks);
+  bottomOuterColorCircle.Update(ticks);
+  caseCircle.Update(ticks);
 
   //countLeds.Update(ticks);
 

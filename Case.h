@@ -48,29 +48,56 @@ Wiring of Corsair Fans in front of case and strip lighting on side:
 
 class Case {
 public:
+
+    static const int LedCount = 87;
+
     Case(CRGB* leds) :
         leds(leds),
         allLeds(leds, 87, 87),
+        topFanInnerLeds(leds, 87, 4),
         topFanOuterLeds(leds, 87, 12),
-        topFanInnerLeds(leds, 87, 4)
+        bottomFanInnerLeds(leds, LedCount, 4),
+        bottomFanOuterLeds(leds, 87, 12),
+        bodyLeds(leds, 87, 55)
     {
         topFanInnerLeds.Set(0, 1);
         topFanInnerLeds.Set(3, 3, -1);
 
         topFanOuterLeds.Set(14, 11, -1);
         topFanOuterLeds.Set(15, 1);
-    }
 
-    static const int LedCount = 87;
+        bottomFanInnerLeds.Set(16, 1);
+        bottomFanInnerLeds.Set(19, 3, -1);
+
+        bottomFanOuterLeds.Set(30, 11, -1);
+        bottomFanOuterLeds.Set(31, 1);
+
+        bodyLeds.Set(86, 55, -1);
+    }
+ 
+    // The leds on the inside hub of the top fan, clockwise from top.
+    const Sequence& TopFanInnerLeds() {
+        return topFanInnerLeds;
+    }
 
     // The leds on the outside rim of the top fan, clockwise from top.
     const Sequence& TopFanOuterLeds() {
         return topFanOuterLeds;
     }
 
-    // The leds on the inside hub of the top fan, clockwise from top.
-    const Sequence& TopFanInnerLeds() {
-        return topFanInnerLeds;
+    // The leds on the inside hub of the bottom fan, clockwise from top.
+    const Sequence& BottomFanInnerLeds() {
+        return bottomFanInnerLeds;
+    }
+
+    // The leds on the outside rim of the bottom fan, clockwise from top.
+    const Sequence& BottomFanOuterLeds() {
+        return bottomFanOuterLeds;
+    }
+
+    // The leds inside the chassis, clockwise from top-left corner.
+    const Sequence& BodyLeds() {
+        return bodyLeds;
     }
 
 private:
@@ -79,6 +106,9 @@ private:
     Sequence allLeds;
     Sequence topFanOuterLeds;
     Sequence topFanInnerLeds;
+    Sequence bottomFanOuterLeds;
+    Sequence bottomFanInnerLeds;
+    Sequence bodyLeds;
 };
 
 #endif
