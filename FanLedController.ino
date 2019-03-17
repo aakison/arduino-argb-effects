@@ -31,19 +31,24 @@
 #include "PopEffect.h"
 #include "HueEffect.h"
 #include "ChaseEffect.h"
-
-int led = 11;
+#include "SolidEffect.h"
+#include "ColorCircleEffect.h"
+#include "Case.h"
+                             
+int led = 5;
 
 const int LED_DT = 7;
 #define COLOR_ORDER GRB
 #define LED_TYPE WS2812B
-#define NUM_LEDS 32
+#define NUM_LEDS 87
 
 #define Fixed int
 
 int maxBright = 140;
 
-struct CRGB leds[NUM_LEDS];
+struct CRGB leds[Case::LedCount];
+
+Case c(leds);
 
 #define HUB 4
 #define RIM 12
@@ -56,27 +61,39 @@ PopEffect pop = PopEffect(leds, 4, 12);
 
 int clock = LOW; 
 
-Sequence allLeds = Sequence(leds, NUM_LEDS, NUM_LEDS);
-Sequence topOuter = Sequence(leds + 4, 12, 12);
-Sequence topInner = Sequence(leds, 4, 4);
-Sequence lowerOuter = Sequence(leds, 32, 12);
-Sequence lowerInner = Sequence(leds + 16, 4, 4);
-Sequence figureEight = Sequence(leds, NUM_LEDS, 24);
-Sequence randomLeds = Sequence(leds, NUM_LEDS, NUM_LEDS);
+Sequence allLeds(leds, NUM_LEDS, NUM_LEDS);
+Sequence topOuter(leds + 4, 12, 12);
+Sequence topInner(leds, 4, 4);
+Sequence lowerOuter(leds, 32, 12);
+Sequence lowerInner(leds + 16, 4, 4);
+Sequence figureEight(leds, NUM_LEDS, 24);
+Sequence randomLeds(leds + 32, 55, 55);
 
-HueEffect hue = HueEffect(topOuter, 7000);
-HueEffect hue2 = HueEffect(topInner, 5000);
-HueEffect hue4 = HueEffect(lowerOuter, 3000);
-HueEffect hue3 = HueEffect(lowerInner, 2000);
+Sequence caseLeds(leds + 32, 55, 55);
 
-ChaseEffect chase = ChaseEffect(figureEight, 2500);
+HueEffect hue(topOuter, 7000);
+HueEffect hue2(topInner, 5000);
+HueEffect hue4(lowerOuter, 3000);
+HueEffect hue3(lowerInner, 2000);
 
-ChaseEffect shower = ChaseEffect(randomLeds, 2000);
+HueEffect caseHue(caseLeds, 10000);
+
+ChaseEffect chase(figureEight, 2500);
+
+ChaseEffect shower(randomLeds, 2000);
+
+SolidEffect allOn(allLeds, CRGB::White);
+
+ColorCircleEffect outerColorCircle(c.TopFanOuterLeds(), 1000); 
+ColorCircleEffect innerColorCircle(c.TopFanInnerLeds(), 1000);
+
+ChaseEffect countLeds = ChaseEffect(allLeds, 30000);
 
 // the setup routine runs once when you press reset:
 void setup() {                
   // initialize the digital pin as an output.
   pinMode(led, OUTPUT);     
+  pinMode(3, INPUT);
   LEDS.addLeds<LED_TYPE, LED_DT, COLOR_ORDER>(leds, NUM_LEDS);
   FastLED.setBrightness(maxBright);
 
@@ -98,20 +115,31 @@ void setup() {
 void loop() {
   long ticks = millis();
 
-  hue.Loop(ticks);
-  //pop.Loop(ticks);
-  hue2.Loop(ticks);
-  hue3.Loop(ticks);
-  hue4.Loop(ticks);
+  //hue.Update(ticks);
+  //pop.Update(ticks);
+  hue2.Update(ticks);
+  hue3.Update(ticks);
+  //hue4.Update(ticks);
   //shower.Update(ticks);
   chase.Update(ticks);
+  caseHue.Update(ticks);
+
+  outerColorCircle.Update(ticks);
+  innerColorCircle.Update(ticks);
+
+  //countLeds.Update(ticks);
+
+  // allOn.Update(ticks);
   
   // Alternate high/low in dev to trigger oscilliscope
   clock = (clock == LOW) ? HIGH : LOW;
-  digitalWrite(led, clock);
- 
+  //digitalWrite(led, clock);
+
+  int s = digitalRead(3);
+  digitalWrite(led, s > 0);
+
   // Show the cumulative effect of all the led changes
   FastLED.show();
-
+  //delay(1000);
   delay(4); // No more than 16 to hit 60fps
 }

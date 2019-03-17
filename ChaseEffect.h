@@ -8,7 +8,7 @@
 
 class ChaseEffect {
 public:
-  ChaseEffect(Sequence& leds, int cycleTime) 
+  ChaseEffect(const Sequence& leds, int cycleTime) 
     : inner(0, 100, 200, 500, cycleTime), leds(leds)
   {
       this->cycleTime = cycleTime;
@@ -24,7 +24,7 @@ public:
     }
   }
 private:
-  Sequence& leds;
+  const Sequence& leds;
   Trapezoid inner;
   int cycleTime;
   int offset;

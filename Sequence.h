@@ -22,6 +22,18 @@ public:
         sequenceIndex = 0;
     }
 
+    // Creates a copy of the sequence.
+    Sequence(const Sequence& source) {
+        allLeds = source.allLeds;
+        ledCount = source.ledCount;
+        sequence = new int[source.sequenceCount];
+        sequenceCount = source.sequenceCount;
+        for(int i = 0; i < sequenceCount; ++i) {
+            sequence[i] = source.sequence[i];
+        }
+        sequenceIndex = source.sequenceIndex;
+    }
+
     // Sets a specifc sequence from within the list of known LEDs.
     // Call this multiple times to string together LEDs in a sequence that aren't contiguous on the strip.
     void Set(int index, int run, int step = 1) {
@@ -34,14 +46,23 @@ public:
     }
 
     // Access the color information for the LED at the given position in this sequence.
-    CRGB& operator[](int index) {
+    CRGB& operator[](int index) const {
         int indirect = sequence[index];
         return allLeds[indirect];
     } 
 
     // Returns the count of elements in this sequence
-    int GetCount() {
+    int GetCount() const {
         return sequenceCount;
+    }
+
+    // Reverses the order of all the Leds in the sequence, makes effects on the sequence reverse direction.
+    void Reverse() {
+        for(int i = 0; i < sequenceCount / 2; ++i) {
+            int temp = sequence[i];
+            sequence[i] = sequence[sequenceCount - i - 1];
+            sequence[sequenceCount - i - 1] = temp;
+        }
     }
 
 private:

@@ -15,7 +15,7 @@ public:
     this->offset = offset;
   }
 
-  void Loop(long ticks) 
+  void Update(long ticks) 
   {
     int hue = InverseLerpLerp(0, duration, 0, 255, (ticks + offset) % duration);
     CRGB color = CHSV(hue, 255, 255);
