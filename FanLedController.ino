@@ -86,6 +86,7 @@ SolidEffect allOn(allLeds, CRGB::White);
 ChaseEffect countLeds = ChaseEffect(allLeds, 30000);
 
 RotatingHueCaseEffect effect1(c, 5000);
+HueEffect effect2(c.AllLeds(), 15000);
 
 // the setup routine runs once when you press reset:
 void setup()
@@ -112,6 +113,9 @@ void setup()
 
 }
 
+int effect = 0;
+int pressed = 0;
+
 void loop()
 {
     long ticks = millis();
@@ -130,14 +134,24 @@ void loop()
 
     // allOn.Update(ticks);
 
-    effect1.Update(ticks);
+    if(effect % 2 == 0) {
+        effect1.Update(ticks);
+    }
+    else {
+        effect2.Update(ticks);
+    }
 
     // Alternate high/low in dev to trigger oscilloscope
     clock = (clock == LOW) ? HIGH : LOW;
     //digitalWrite(led, clock);
 
+    int lastPressed = pressed;
     int s = digitalRead(3);
-    digitalWrite(led, s > 0);
+    pressed = s > 0 ? 1 : 0;
+    digitalWrite(led, pressed);
+    if(pressed == 1 && lastPressed == 0) {
+        ++effect;
+    }
 
     // Show the cumulative effect of all the led changes
     FastLED.show();

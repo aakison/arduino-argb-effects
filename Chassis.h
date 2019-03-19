@@ -74,7 +74,12 @@ public:
 
         bodyLeds.Set(86, 55, -1);
     }
- 
+
+    // All the leds in the entire case.
+    const Sequence& AllLeds() const {
+        return allLeds;
+    }
+
     // The leds on the inside hub of the top fan, clockwise from top.
     const Sequence& TopFanInnerLeds() const {
         return topFanInnerLeds;
