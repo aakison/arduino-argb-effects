@@ -33,9 +33,10 @@
 #include "ChaseEffect.h"
 #include "SolidEffect.h"
 #include "ColorCircleEffect.h"
-#include "Case.h"
+#include "Chassis.h"
 #include "CompositeEffect.h"
-                             
+#include "RotatingHueCaseEffect.h"
+
 int led = 5;
 
 const int LED_DT = 7;
@@ -47,20 +48,20 @@ const int LED_DT = 7;
 
 int maxBright = 140;
 
-struct CRGB leds[Case::LedCount];
+struct CRGB leds[Chassis::LedCount];
 
-Case c(leds);
+Chassis c(leds);
 
 #define HUB 4
 #define RIM 12
 int hub[HUB];
 int rim[RIM];
 
-Trapezoid* trapezoid = new Trapezoid(0, 65, 70, 100, 200);
+Trapezoid *trapezoid = new Trapezoid(0, 65, 70, 100, 200);
 
 PopEffect pop = PopEffect(leds, 4, 12);
 
-int clock = LOW; 
+int clock = LOW;
 
 Sequence allLeds(leds, NUM_LEDS, NUM_LEDS);
 Sequence topOuter(leds + 4, 12, 12);
@@ -68,7 +69,6 @@ Sequence topInner(leds, 4, 4);
 Sequence lowerOuter(leds, 32, 12);
 Sequence lowerInner(leds + 16, 4, 4);
 Sequence figureEight(leds, NUM_LEDS, 24);
-Sequence randomLeds(leds + 32, 55, 55);
 
 Sequence caseLeds(leds + 32, 55, 55);
 
@@ -81,88 +81,66 @@ HueEffect caseHue(caseLeds, 10000);
 
 ChaseEffect chase(figureEight, 2500);
 
-ChaseEffect shower(randomLeds, 2000);
-
 SolidEffect allOn(allLeds, CRGB::White);
-
-const int effectTime = 5000;
-const int effectOffset = (int)((long)effectTime * 7 / 16);
-
-ColorCircleEffect topInnerColorCircle(c.TopFanInnerLeds(), effectTime);
-ColorCircleEffect topOuterColorCircle(c.TopFanOuterLeds(), effectTime); 
-
-Sequence bottomInnerCounterClockwise(c.BottomFanInnerLeds());
-Sequence bottomOuterCounterClockwise(c.BottomFanOuterLeds());
-
-ColorCircleEffect bottomInnerColorCircle(bottomInnerCounterClockwise, effectTime, effectOffset);
-ColorCircleEffect bottomOuterColorCircle(bottomOuterCounterClockwise, effectTime, effectOffset); 
 
 ChaseEffect countLeds = ChaseEffect(allLeds, 30000);
 
-ColorCircleEffect caseCircle(c.BodyLeds(), effectTime);
-
-CompositeEffect ce(5);
+RotatingHueCaseEffect effect1(c, 5000);
 
 // the setup routine runs once when you press reset:
-void setup() {                
-  // initialize the digital pin as an output.
-  pinMode(led, OUTPUT);     
-  pinMode(3, INPUT);
-  LEDS.addLeds<LED_TYPE, LED_DT, COLOR_ORDER>(leds, NUM_LEDS);
-  FastLED.setBrightness(maxBright);
+void setup()
+{
+    // initialize the digital pin as an output.
+    pinMode(led, OUTPUT);
+    pinMode(3, INPUT);
+    LEDS.addLeds<LED_TYPE, LED_DT, COLOR_ORDER>(leds, NUM_LEDS);
+    FastLED.setBrightness(maxBright);
 
-  for(int i = 0; i < HUB; ++i) {
-    hub[i] = HUB - 1 - i;
-  }
-  for(int i = 0; i < RIM; ++i) {
-    rim[i] = HUB + i;
-  }
+    for (int i = 0; i < HUB; ++i)
+    {
+        hub[i] = HUB - 1 - i;
+    }
+    for (int i = 0; i < RIM; ++i)
+    {
+        rim[i] = HUB + i;
+    }
 
-  figureEight.Set(15, 7, -1);
-  figureEight.Set(30, 2, +1);
-  figureEight.Set(20, 10, +1);
-  figureEight.Set(8, 5, -1);
+    figureEight.Set(15, 7, -1);
+    figureEight.Set(30, 2, +1);
+    figureEight.Set(20, 10, +1);
+    figureEight.Set(8, 5, -1);
 
-  randomLeds.Set(0, NUM_LEDS, 997);
-
-  bottomInnerCounterClockwise.Reverse();
-  bottomOuterCounterClockwise.Reverse();
-
-  ce.Add(caseCircle);
-  ce.Add(topInnerColorCircle);
-  ce.Add(topOuterColorCircle);
-  ce.Add(bottomInnerColorCircle);
-  ce.Add(bottomOuterColorCircle);
 }
 
-void loop() {
-  long ticks = millis();
+void loop()
+{
+    long ticks = millis();
 
-  //hue.Update(ticks);
-  //pop.Update(ticks);
-  hue2.Update(ticks);
-  hue3.Update(ticks);
-  //hue4.Update(ticks);
-  //shower.Update(ticks);
-  caseHue.Update(ticks);
+    //hue.Update(ticks);
+    //pop.Update(ticks);
+    //hue2.Update(ticks);
+    //hue3.Update(ticks);
+    //hue4.Update(ticks);
+    //shower.Update(ticks);
+    //caseHue.Update(ticks);
 
-  ce.Update(ticks);
+    //chase.Update(ticks);
 
-  //chase.Update(ticks);
+    //countLeds.Update(ticks);
 
-  //countLeds.Update(ticks);
+    // allOn.Update(ticks);
 
-  // allOn.Update(ticks);
-  
-  // Alternate high/low in dev to trigger oscilliscope
-  clock = (clock == LOW) ? HIGH : LOW;
-  //digitalWrite(led, clock);
+    effect1.Update(ticks);
 
-  int s = digitalRead(3);
-  digitalWrite(led, s > 0);
+    // Alternate high/low in dev to trigger oscilloscope
+    clock = (clock == LOW) ? HIGH : LOW;
+    //digitalWrite(led, clock);
 
-  // Show the cumulative effect of all the led changes
-  FastLED.show();
-  //delay(1000);
-  delay(4); // No more than 16 to hit 60fps
+    int s = digitalRead(3);
+    digitalWrite(led, s > 0);
+
+    // Show the cumulative effect of all the led changes
+    FastLED.show();
+    //delay(1000);
+    delay(4); // No more than 16 to hit 60fps
 }

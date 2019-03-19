@@ -3,6 +3,7 @@
 
 #include "Effect.h"
 
+// An effect that is a composite of multiple other effects that are overlaid on top of each other.
 class CompositeEffect : public Effect {
 public:
     CompositeEffect(int count) : 

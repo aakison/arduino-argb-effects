@@ -11,7 +11,7 @@ public:
         allLeds = leds;
         this->ledCount = ledCount;
 
-        sequence = new int[sequenceCount];
+        sequence = new byte[sequenceCount];
         this->sequenceCount = sequenceCount;
 
         for(int i = 0; i < sequenceCount; ++i) {
@@ -26,7 +26,7 @@ public:
     Sequence(const Sequence& source) {
         allLeds = source.allLeds;
         ledCount = source.ledCount;
-        sequence = new int[source.sequenceCount];
+        sequence = new byte[source.sequenceCount];
         sequenceCount = source.sequenceCount;
         for(int i = 0; i < sequenceCount; ++i) {
             sequence[i] = source.sequence[i];
@@ -67,10 +67,10 @@ public:
 
 private:
     CRGB* allLeds;
-    int ledCount;
-    int* sequence;
-    int sequenceCount;
-    int sequenceIndex;
+    byte ledCount;
+    byte* sequence;
+    byte sequenceCount;
+    byte sequenceIndex;
 };
 
 #endif

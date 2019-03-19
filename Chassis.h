@@ -1,5 +1,5 @@
-#ifndef CASE_H
-#define CASE_H
+#ifndef CHASSIS_H
+#define CHASSIS_H
 
 #include "Sequence.h"
 
@@ -46,12 +46,12 @@ Wiring of Corsair Fans in front of case and strip lighting on side:
 
 */
 
-class Case {
+class Chassis {
 public:
 
     static const int LedCount = 87;
 
-    Case(CRGB* leds) :
+    Chassis(CRGB* leds) :
         leds(leds),
         allLeds(leds, 87, 87),
         topFanInnerLeds(leds, 87, 4),
@@ -76,27 +76,27 @@ public:
     }
  
     // The leds on the inside hub of the top fan, clockwise from top.
-    const Sequence& TopFanInnerLeds() {
+    const Sequence& TopFanInnerLeds() const {
         return topFanInnerLeds;
     }
 
     // The leds on the outside rim of the top fan, clockwise from top.
-    const Sequence& TopFanOuterLeds() {
+    const Sequence& TopFanOuterLeds() const {
         return topFanOuterLeds;
     }
 
     // The leds on the inside hub of the bottom fan, clockwise from top.
-    const Sequence& BottomFanInnerLeds() {
+    const Sequence& BottomFanInnerLeds() const {
         return bottomFanInnerLeds;
     }
 
     // The leds on the outside rim of the bottom fan, clockwise from top.
-    const Sequence& BottomFanOuterLeds() {
+    const Sequence& BottomFanOuterLeds() const {
         return bottomFanOuterLeds;
     }
 
     // The leds inside the chassis, clockwise from top-left corner.
-    const Sequence& BodyLeds() {
+    const Sequence& BodyLeds() const {
         return bodyLeds;
     }
 
