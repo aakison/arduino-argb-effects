@@ -36,6 +36,7 @@
 #include "Chassis.h"
 #include "CompositeEffect.h"
 #include "RotatingHueCaseEffect.h"
+#include "ContrastingHueCaseEffect.h"
 
 int led = 5;
 
@@ -87,6 +88,7 @@ ChaseEffect countLeds = ChaseEffect(allLeds, 30000);
 
 RotatingHueCaseEffect effect1(c, 5000);
 HueEffect effect2(c.AllLeds(), 15000);
+ContrastingHueCaseEffect effect3(c, 7000);
 
 // the setup routine runs once when you press reset:
 void setup()
@@ -134,11 +136,14 @@ void loop()
 
     // allOn.Update(ticks);
 
-    if(effect % 2 == 0) {
+    if(effect % 3 == 0) {
         effect1.Update(ticks);
     }
-    else {
+    else if(effect % 3 == 1) {
         effect2.Update(ticks);
+    }
+    else {
+        effect3.Update(ticks);
     }
 
     // Alternate high/low in dev to trigger oscilloscope
