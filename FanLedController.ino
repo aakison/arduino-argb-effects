@@ -7,16 +7,6 @@
 #include <cpp_compat.h>
 #include <dmx.h>
 #include <FastLED.h>
-#include <fastled_config.h>
-#include <fastled_delay.h>
-#include <fastled_progmem.h>
-#include <fastpin.h>
-#include <fastspi.h>
-#include <fastspi_bitbang.h>
-#include <fastspi_dma.h>
-#include <fastspi_nop.h>
-#include <fastspi_ref.h>
-#include <fastspi_types.h>
 #include <hsv2rgb.h>
 #include <led_sysdefs.h>
 #include <lib8tion.h>
@@ -26,8 +16,6 @@
 #include <platforms.h>
 #include <power_mgt.h>
 
-#include "Sequence.h"
-#include "Trapezoid.h"
 #include "PopEffect.h"
 #include "HueEffect.h"
 #include "ChaseEffect.h"
@@ -45,17 +33,17 @@ const int maxBright = 255;
 
 CRGB leds[Chassis::LedCount];
 
-Chassis c(leds);
+Chassis chassis(leds);
 
 PopEffect pop = PopEffect(leds, 4, 12);
 
 int clock = LOW;
 
-RotatingHueCaseEffect effect1(c, 5000);
-HueEffect effect2(c.AllLeds(), 15000);
-ContrastingHueCaseEffect effect3(c, 7000);
-ChaseEffect effect4(c.AllLeds(), 3000);
-ChaseEffect effect5(c.FigureEight(), 2000);
+RotatingHueCaseEffect effect1(chassis, 5000);
+HueEffect effect2(chassis.AllLeds(), 15000);
+ContrastingHueCaseEffect effect3(chassis, 7000);
+ChaseEffect effect4(chassis.AllLeds(), 3000);
+ChaseEffect effect5(chassis.FigureEight(), 2000);
 
 int effect = 0;
 
