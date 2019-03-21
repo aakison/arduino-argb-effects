@@ -4,9 +4,10 @@
 #include <pixeltypes.h>
 #include <FastLED.h>
 
+#include "Effect.h"
 #include "Trapezoid.h"
 
-class ChaseEffect {
+class ChaseEffect : public Effect {
 public:
   ChaseEffect(const Sequence& leds, int cycleTime) 
     : inner(0, 100, 200, 500, cycleTime), leds(leds)

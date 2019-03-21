@@ -43,7 +43,6 @@ int led = 5;
 const int LED_DT = 7;
 #define COLOR_ORDER GRB
 #define LED_TYPE WS2812B
-#define NUM_LEDS 87
 
 #define Fixed int
 
@@ -53,103 +52,59 @@ struct CRGB leds[Chassis::LedCount];
 
 Chassis c(leds);
 
-#define HUB 4
-#define RIM 12
-int hub[HUB];
-int rim[RIM];
-
-Trapezoid *trapezoid = new Trapezoid(0, 65, 70, 100, 200);
-
 PopEffect pop = PopEffect(leds, 4, 12);
 
 int clock = LOW;
 
-Sequence allLeds(leds, NUM_LEDS, NUM_LEDS);
-Sequence topOuter(leds + 4, 12, 12);
-Sequence topInner(leds, 4, 4);
-Sequence lowerOuter(leds, 32, 12);
-Sequence lowerInner(leds + 16, 4, 4);
-Sequence figureEight(leds, NUM_LEDS, 24);
-
-Sequence caseLeds(leds + 32, 55, 55);
-
-HueEffect hue(topOuter, 7000);
-HueEffect hue2(topInner, 5000);
-HueEffect hue4(lowerOuter, 3000);
-HueEffect hue3(lowerInner, 2000);
-
-HueEffect caseHue(caseLeds, 10000);
-
-ChaseEffect chase(figureEight, 2500);
-
-SolidEffect allOn(allLeds, CRGB::White);
-
-ChaseEffect countLeds = ChaseEffect(allLeds, 30000);
-
 RotatingHueCaseEffect effect1(c, 5000);
 HueEffect effect2(c.AllLeds(), 15000);
 ContrastingHueCaseEffect effect3(c, 7000);
+ChaseEffect effect4(c.AllLeds(), 3000);
+ChaseEffect effect5(c.FigureEight(), 2000);
 
-// the setup routine runs once when you press reset:
+int effect = 0;
+
 void setup()
 {
     // initialize the digital pin as an output.
     pinMode(led, OUTPUT);
     pinMode(3, INPUT);
-    LEDS.addLeds<LED_TYPE, LED_DT, COLOR_ORDER>(leds, NUM_LEDS);
+    LEDS.addLeds<LED_TYPE, LED_DT, COLOR_ORDER>(leds, Chassis::LedCount);
     FastLED.setBrightness(maxBright);
 
-    for (int i = 0; i < HUB; ++i)
-    {
-        hub[i] = HUB - 1 - i;
-    }
-    for (int i = 0; i < RIM; ++i)
-    {
-        rim[i] = HUB + i;
-    }
-
-    figureEight.Set(15, 7, -1);
-    figureEight.Set(30, 2, +1);
-    figureEight.Set(20, 10, +1);
-    figureEight.Set(8, 5, -1);
-
+    // Read a floating analog pin to get a random start value
+    effect = analogRead(A3);
 }
 
-int effect = 0;
 int pressed = 0;
+
+Effect effects[] = { effect1, effect2, effect3, effect4 };
 
 void loop()
 {
     long ticks = millis();
 
-    //hue.Update(ticks);
-    //pop.Update(ticks);
-    //hue2.Update(ticks);
-    //hue3.Update(ticks);
-    //hue4.Update(ticks);
-    //shower.Update(ticks);
-    //caseHue.Update(ticks);
-
-    //chase.Update(ticks);
-
-    //countLeds.Update(ticks);
-
-    // allOn.Update(ticks);
-
-    if(effect % 3 == 0) {
+    if(effect % 5 == 0) {
         effect1.Update(ticks);
     }
-    else if(effect % 3 == 1) {
+    else if(effect % 5 == 1) {
         effect2.Update(ticks);
     }
-    else {
+    else if(effect %5 == 2 ) {
         effect3.Update(ticks);
+    }
+    else if(effect % 5 == 3) {
+        effect4.Update(ticks);
+    }
+    else {
+        effect5.Update(ticks);
     }
 
     // Alternate high/low in dev to trigger oscilloscope
     clock = (clock == LOW) ? HIGH : LOW;
-    //digitalWrite(led, clock);
+    digitalWrite(led, clock);
 
+    // Check switch to move to next effect.
     int lastPressed = pressed;
     int s = digitalRead(3);
     pressed = s > 0 ? 1 : 0;
@@ -160,6 +115,5 @@ void loop()
 
     // Show the cumulative effect of all the led changes
     FastLED.show();
-    //delay(1000);
-    delay(4); // No more than 16 to hit 60fps
+    delay(4); // No more than 16 to hit 60fps, at least 2-4 to debounce switch logic above.
 }

@@ -58,7 +58,8 @@ public:
         topFanOuterLeds(leds, 87, 12),
         bottomFanInnerLeds(leds, LedCount, 4),
         bottomFanOuterLeds(leds, 87, 12),
-        bodyLeds(leds, 87, 55)
+        bodyLeds(leds, 87, 55),
+        figureEight(leds, 87, 24)
     {
         topFanInnerLeds.Set(0, 1);
         topFanInnerLeds.Set(3, 3, -1);
@@ -73,6 +74,12 @@ public:
         bottomFanOuterLeds.Set(31, 1);
 
         bodyLeds.Set(86, 55, -1);
+
+        figureEight.Set(15, 7, -1);
+        figureEight.Set(30, 2, +1);
+        figureEight.Set(20, 10, +1);
+        figureEight.Set(8, 5, -1);
+
     }
 
     // All the leds in the entire case.
@@ -105,6 +112,10 @@ public:
         return bodyLeds;
     }
 
+    const Sequence& FigureEight() const {
+        return figureEight;
+    }
+
 private:
 
     CRGB* leds;
@@ -114,6 +125,7 @@ private:
     Sequence bottomFanOuterLeds;
     Sequence bottomFanInnerLeds;
     Sequence bodyLeds;
+    Sequence figureEight;
 };
 
 #endif
