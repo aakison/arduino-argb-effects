@@ -5,6 +5,7 @@
         "crgb",
         "leds",
         "lerp",
+        "millis",
         "num"
     ],
     "arduino.path": "C:/Program Files (x86)/Arduino",

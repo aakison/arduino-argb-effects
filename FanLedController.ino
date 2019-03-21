@@ -38,17 +38,12 @@
 #include "RotatingHueCaseEffect.h"
 #include "ContrastingHueCaseEffect.h"
 
-int led = 5;
+const int switchPin = 3;
+const int onboardLedPin = 5;
+const int argbSignalPin = 7;
+const int maxBright = 255;
 
-const int LED_DT = 7;
-#define COLOR_ORDER GRB
-#define LED_TYPE WS2812B
-
-#define Fixed int
-
-int maxBright = 140;
-
-struct CRGB leds[Chassis::LedCount];
+CRGB leds[Chassis::LedCount];
 
 Chassis c(leds);
 
@@ -67,9 +62,9 @@ int effect = 0;
 void setup()
 {
     // initialize the digital pin as an output.
-    pinMode(led, OUTPUT);
-    pinMode(3, INPUT);
-    LEDS.addLeds<LED_TYPE, LED_DT, COLOR_ORDER>(leds, Chassis::LedCount);
+    pinMode(onboardLedPin, OUTPUT);
+    pinMode(switchPin, INPUT);
+    LEDS.addLeds<WS2812B, argbSignalPin>(leds, Chassis::LedCount);
     FastLED.setBrightness(maxBright);
 
     // Read a floating analog pin to get a random start value
@@ -102,13 +97,12 @@ void loop()
 
     // Alternate high/low in dev to trigger oscilloscope
     clock = (clock == LOW) ? HIGH : LOW;
-    digitalWrite(led, clock);
+    digitalWrite(onboardLedPin, clock);
 
     // Check switch to move to next effect.
     int lastPressed = pressed;
-    int s = digitalRead(3);
+    int s = digitalRead(switchPin);
     pressed = s > 0 ? 1 : 0;
-    digitalWrite(led, pressed);
     if(pressed == 1 && lastPressed == 0) {
         ++effect;
     }
