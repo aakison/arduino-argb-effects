@@ -5,6 +5,7 @@
 #include <FastLED.h>
 
 #include "Effect.h"
+#include "Sequence.h"
 
 // A simple effect that updates the hue of all leds in a sequence in sync.
 class HueEffect : public Effect {

@@ -4,6 +4,8 @@
 #include <pixeltypes.h>
 #include <FastLED.h>
 
+#include "Sequence.h"
+
 class SolidEffect {
 public:
   SolidEffect(Sequence& leds, CRGB color) 

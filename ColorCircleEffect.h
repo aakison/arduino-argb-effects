@@ -5,6 +5,7 @@
 #include <FastLED.h>
 
 #include "Trapezoid.h"
+#include "Sequence.h"
 #include "Effect.h"
 #include "Math.h"
 

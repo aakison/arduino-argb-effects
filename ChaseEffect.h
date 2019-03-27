@@ -6,6 +6,7 @@
 
 #include "Effect.h"
 #include "Trapezoid.h"
+#include "Sequence.h"
 
 class ChaseEffect : public Effect {
 public:

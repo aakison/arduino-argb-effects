@@ -49,17 +49,17 @@ Wiring of Corsair Fans in front of case and strip lighting on side:
 class Chassis {
 public:
 
-    static const int LedCount = 87;
+    static const int LedCount = 103;
 
     Chassis(CRGB* leds) :
         leds(leds),
-        allLeds(leds, 87, 87),
-        topFanInnerLeds(leds, 87, 4),
-        topFanOuterLeds(leds, 87, 12),
+        allLeds(leds, LedCount, LedCount),
+        topFanInnerLeds(leds, LedCount, 4),
+        topFanOuterLeds(leds, LedCount, 12),
         bottomFanInnerLeds(leds, LedCount, 4),
-        bottomFanOuterLeds(leds, 87, 12),
-        bodyLeds(leds, 87, 55),
-        figureEight(leds, 87, 24)
+        bottomFanOuterLeds(leds, LedCount, 12),
+        bodyLeds(leds, LedCount, 71),
+        figureEight(leds, LedCount, 24)
     {
         topFanInnerLeds.Set(0, 1);
         topFanInnerLeds.Set(3, 3, -1);
@@ -73,12 +73,17 @@ public:
         bottomFanOuterLeds.Set(30, 11, -1);
         bottomFanOuterLeds.Set(31, 1);
 
-        bodyLeds.Set(86, 55, -1);
+        bodyLeds.Set(102 - 43 , 71 - 43, -1);
+        bodyLeds.Set(102, 43, -1);
 
         figureEight.Set(15, 7, -1);
         figureEight.Set(30, 2, +1);
         figureEight.Set(20, 10, +1);
         figureEight.Set(8, 5, -1);
+
+        allLeds.Set(0, 32);
+        allLeds.Set(102 - 43 , 71 - 43, -1);
+        allLeds.Set(102, 43, -1);
 
     }
 
